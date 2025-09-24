@@ -26,6 +26,7 @@ class TestGetFilesInfo(unittest.TestCase):
 """
 
 class TestGetFilesContent(unittest.TestCase):
+    """
     def test_1(self):
         result = get_file_content("calculator", ".")
         print("Result for current directory:")
@@ -49,6 +50,26 @@ class TestGetFilesContent(unittest.TestCase):
     def test_5(self):
         result = get_file_content("calculator", "lorem.txt")
         print("Result for 'lorem.txt' file:")
+        print(result)
+    """
+    def test_6(self):
+        result = get_file_content("calculator", "main.py")
+        print("Result for 'main.py' file:")
+        print(result)
+
+    def test_7(self):
+        result = get_file_content("calculator", "pkg/calculator.py")
+        print("Result for 'pkg/calculator.py' file:")
+        print(result)
+
+    def test_8(self):
+        result = get_file_content("calculator", "/bin/cat")
+        print("Result for '/bin/cat' file:")
+        print(result)
+
+    def test_9(self):
+        result = get_file_content("calculator", "pkg/does_not_exist.py")
+        print("Result for 'pkg/does_not_exist.py' file:")
         print(result)
 
 

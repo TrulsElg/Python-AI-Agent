@@ -47,6 +47,8 @@ def get_file_content(working_directory, file_path):
             if len(file_contents) > MAX_CHARACTERS_IN_FILE:
                 return file_contents[0:MAX_CHARACTERS_IN_FILE] + \
                     f'[...File "{file_path}" truncated at {MAX_CHARACTERS_IN_FILE} characters]'
+            else:
+                return file_contents
 
     except Exception as e:
         return f'Error: {e}'
