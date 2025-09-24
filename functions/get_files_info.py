@@ -1,5 +1,8 @@
 import os
 
+from config import MAX_CHARACTERS_IN_FILE
+
+
 def get_files_info(working_directory, directory="."):
 
     try:
@@ -24,5 +27,26 @@ def get_files_info(working_directory, directory="."):
                 directory_content_string = f" - {entry}: file_size={size} bytes, is_dir={is_dir}"
 
         return directory_content_string
+    except Exception as e:
+        return f'Error: {e}'
+
+
+def get_file_content(working_directory, file_path):
+    try:
+        working_directory = os.path.join(os.getcwd(), working_directory)
+        abs_path = os.path.realpath(os.path.join(working_directory, file_path))
+
+        if not os.path.commonpath([abs_path, working_directory]) == working_directory:
+            return f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
+
+        if not os.path.isfile(abs_path):
+            return f'Error: File not found or is not a regular file: "{file_path}"'
+
+        with open(abs_path, 'r') as f:
+            file_contents = f.read()
+            if len(file_contents) > MAX_CHARACTERS_IN_FILE:
+                return file_contents[0:MAX_CHARACTERS_IN_FILE] + \
+                    f'[...File "{file_path}" truncated at {MAX_CHARACTERS_IN_FILE} characters]'
+
     except Exception as e:
         return f'Error: {e}'
