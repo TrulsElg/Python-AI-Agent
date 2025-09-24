@@ -1,5 +1,6 @@
 import unittest
 from functions.get_files_info import get_file_content
+from functions.write_file import write_file
 
 
 """
@@ -51,7 +52,7 @@ class TestGetFilesContent(unittest.TestCase):
         result = get_file_content("calculator", "lorem.txt")
         print("Result for 'lorem.txt' file:")
         print(result)
-    """
+
     def test_6(self):
         result = get_file_content("calculator", "main.py")
         print("Result for 'main.py' file:")
@@ -71,7 +72,20 @@ class TestGetFilesContent(unittest.TestCase):
         result = get_file_content("calculator", "pkg/does_not_exist.py")
         print("Result for 'pkg/does_not_exist.py' file:")
         print(result)
+    """
 
+class TestGetFilesInfo(unittest.TestCase):
+    def test_1(self):
+        result = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
+        print(result)
+
+    def test_2(self):
+        result = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
+        print(result)
+
+    def test_3(self):
+        result = write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
+        print(result)
 
 if __name__ == "__main__":
     unittest.main()
