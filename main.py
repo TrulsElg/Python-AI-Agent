@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from config import system_prompt, model_name
-from functions.get_files_info import schema_get_files_info, available_functions
+from functions.get_files_info import schema_get_files_info
 
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -23,6 +23,12 @@ def main():
         messages = [
             types.Content(role="user", parts=[types.Part(text=user_prompt)]),
         ]
+
+        available_functions = types.Tool(
+            function_declarations=[
+                schema_get_files_info,
+            ]
+        )
 
         response = client.models.generate_content(
             model= model_name,
