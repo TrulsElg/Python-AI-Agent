@@ -33,9 +33,8 @@ schema_get_file_content = types.FunctionDeclaration(
 
 
 def get_files_info(working_directory, directory="."):
-
     try:
-        working_directory = os.path.join(os.getcwd(), working_directory)
+        working_directory = os.path.realpath(os.path.join(os.getcwd(), working_directory))
         abs_path = os.path.realpath(os.path.join(working_directory, directory))
 
         if not os.path.commonpath([abs_path, working_directory]) == working_directory:
