@@ -17,6 +17,20 @@ schema_get_files_info = types.FunctionDeclaration(
     ),
 )
 
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description=f"Get the contents of the specified file, constrained to the working directory and the first {MAX_CHARACTERS_IN_FILE} characters in the file.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The file path for the file to get the contents from, relative to the working directory. Must be provided",
+            ),
+        },
+    ),
+)
+
 
 def get_files_info(working_directory, directory="."):
 
