@@ -36,37 +36,53 @@ def main():
             ]
         )
 
-        response = client.models.generate_content(
-            model= model_name,
-            contents=messages,
-            config=types.GenerateContentConfig(tools=[available_functions],
-                                               system_instruction=system_prompt)
-        )
+        for i in range(20):
+            try:
+                response = client.models.generate_content(
+                    model= model_name,
+                    contents=messages,
+                    config=types.GenerateContentConfig(tools=[available_functions],
+                                                       system_instruction=system_prompt)
+                )
 
-        if verbose_output:
-            print(f"User prompt: {user_prompt}")
-            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-            print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
-
-        if response.function_calls:
-            for function_call_part in response.function_calls:
-                # print(f"Calling function: {function_call_part.name}({function_call_part.args})")
-                call_result = call_function(function_call_part=function_call_part, verbose=verbose_output)
-
-                part = call_result.parts[0] if call_result.parts else None
-                if part is None:
-                    raise ValueError("Function call returned no parts")
-
-                if not hasattr(part, "function_response"):
-                    raise ValueError("Function call part missing function_response")
-
-                if not hasattr(part.function_response, "response") or not part.function_response.response:
-                    raise ValueError("Function call did not return a response")
+                for candidate in response.candidates:
+                    messages.append(candidate.content)
 
                 if verbose_output:
-                    print(f"-> {call_result.parts[0].function_response.response}")
-        else:
-            print(response.text)
+                    print(f"User prompt: {user_prompt}")
+                    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+                    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+
+                if response.function_calls:
+                    for function_call_part in response.function_calls:
+                        # print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+                        call_result = call_function(function_call_part=function_call_part, verbose=verbose_output)
+
+                        part = call_result.parts[0] if call_result.parts else None
+                        if part is None:
+                            raise ValueError("Function call returned no parts")
+
+                        if not hasattr(part, "function_response"):
+                            raise ValueError("Function call part missing function_response")
+
+                        if not hasattr(part.function_response, "response") or not part.function_response.response:
+                            raise ValueError("Function call did not return a response")
+
+                        if verbose_output:
+                            print(f"-> {call_result.parts[0].function_response.response}")
+
+                        messages.append(types.Content(role="user", parts=call_result.parts))
+                else:
+                    if response.text:
+                        print(response.text)
+                        break
+                    else:
+                        if verbose_output:
+                            print("Empty response with no tool calls; stopping.")
+                        break
+            except Exception as e:
+                print(e)
+                break
 
     else:
         print("No input provided")
