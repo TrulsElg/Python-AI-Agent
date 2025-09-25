@@ -24,7 +24,7 @@ schema_run_file = types.FunctionDeclaration(
 
 def run_python_file(working_directory, file_path, args=()):
     try:
-        working_directory = os.path.join(os.getcwd(), working_directory)
+        working_directory = os.path.realpath(os.path.join(os.getcwd(), working_directory))
         abs_path = os.path.realpath(os.path.join(working_directory, file_path))
 
         if not os.path.commonpath([abs_path, working_directory]) == working_directory:

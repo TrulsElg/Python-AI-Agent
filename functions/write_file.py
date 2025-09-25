@@ -23,7 +23,7 @@ schema_write_file = types.FunctionDeclaration(
 
 def write_file(working_directory, file_path, content):
     try:
-        working_directory = os.path.join(os.getcwd(), working_directory)
+        working_directory = os.path.realpath(os.path.join(os.getcwd(), working_directory))
         abs_path = os.path.realpath(os.path.join(working_directory, file_path))
 
         if not os.path.commonpath([abs_path, working_directory]) == working_directory:
